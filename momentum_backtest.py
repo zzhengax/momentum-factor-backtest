@@ -21,7 +21,6 @@ prices = pd.read_csv(
 
 prices = prices[ ["GOOGL", "AAPL", "MSFT"]]
 
-
 asset_returns = prices.pct_change(fill_method=None)
 
 benchmark_returns = asset_returns.mean(axis=1)
@@ -29,7 +28,7 @@ benchmark_returns = asset_returns.mean(axis=1)
 def run_backtest(prices, lookback, cost_bps):
     asset_returns = prices.pct_change(fill_method=None)
     momentum = prices / prices.shift(lookback) - 1
-    ranks = momentum.rank(axis=1, ascending=False)
+    ranks = momentum.rank(axis=1, ascending=False, method = "first")
     target_weights = pd.DataFrame(
     0.0,
     index = prices.index,
@@ -115,10 +114,8 @@ lookback_summary = pd.DataFrame(
     summary_rows
 ).set_index("Lookback")
 
-
 split_position = int(len(prices) * 0.70)
 split_date = prices.index[split_position]
-
 
 train_rows = []
 for current_lookback in lookbacks:
@@ -145,12 +142,9 @@ train_summary = pd.DataFrame(
     train_rows
 ).set_index("Lookback")
 
-
 selected_lookback = (
     train_summary["Sharpe"].idxmax()
 )
-
-
 
 selected_backtest = backtests[selected_lookback]
 test_result = selected_backtest.loc[
@@ -195,9 +189,7 @@ for current_cost in cost_levels:
     metrics["Average Turnover"] = cost_test_result["turnover"].mean()
     metrics["Cost bps"] = current_cost
     cost_rows.append(metrics)
-cost_summary = (pd.DataFrame(cost_rows).set_index("Cost bps").sort_index())
-
-
+cost_summary = pd.DataFrame(cost_rows).set_index("Cost bps").sort_index()
 
 selected_backtest = backtests[selected_lookback]
 strategy_test = selected_backtest.loc[
