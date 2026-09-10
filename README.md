@@ -26,9 +26,9 @@ The current CSV has no missing prices or duplicate dates. The file does not reta
 
 For each stock, momentum is the price change over a lookback window of `N` trading days:
 
-
+```text
 momentum[i, t] = price[i, t] / price[i, t - N] - 1
-
+```
 
 Stocks are ranked daily in descending order of momentum. The intended target weights are:
 
@@ -42,12 +42,12 @@ With complete signals and unique ranks, this gives **net exposure of 0** and **g
 
 Target weights are shifted by one trading day and multiplied by daily close-to-close stock returns. For applied weights `w` and stock returns `r`:
 
-
+```text
 gross_return[t] = sum_i(w[i, t] * r[i, t])
 turnover[t] = sum_i(abs(w[i, t] - w[i, t - 1]))
 transaction_cost[t] = turnover[t] * cost_bps / 10000
 net_return[t] = gross_return[t] - transaction_cost[t]
-
+```
 
 Turnover uses the full sum of absolute weight changes, without dividing by two. A cost assumption of 10 basis points (bps) means 0.10% per unit of traded notional.
 
@@ -134,12 +134,12 @@ The reported figures correspond to the saved [testing summary](results/day5_3y_t
 
 Python 3 is required. On macOS or Linux, open a terminal in the repository root. For a new local environment:
 
-
+```bash
 python3 -m venv .venv
 source .venv/bin/activate
 python -m pip install -r requirements.txt
 python momentum_backtest.py
-
+```
 
 If this repository already has a working virtual environment, skip the creation step. For later runs, activate that environment and run the script.
 
