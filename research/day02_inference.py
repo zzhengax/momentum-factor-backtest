@@ -177,4 +177,3 @@ fig.savefig(
     output_dir / "confidence_intervals.png",
     dpi = 150
 )
-plt.show()
