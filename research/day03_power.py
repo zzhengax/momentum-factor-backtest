@@ -151,4 +151,3 @@ fig.savefig(
     output_dir / "power_vs_sample_size.png",
     dpi = 150
 )
-plt.show()
